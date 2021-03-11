@@ -8,9 +8,94 @@ import {CalculadoraService} from '../services';
 })
 export class CalculadoraComponent implements OnInit {
 
-  constructor(private calculadoraService: CalculadoraService) { }
+  private numero1:  string;
+  private numero2:  string;
+  private resultado: number ;
+  private operacao:  string;
+  
+  constructor(private calculadoraService: CalculadoraService)  { }
 
   ngOnInit(): void {
+    this.limpar();
   }
+//execulta o botão C
+//inicialisando ovalor das variaves
+  limpar() : void{
+    this.numero1 = '0';
+    this.numero2 = null;
+    this.resultado = null;
+    this.operacao = null;
+   }
+
+   adicionarNumero(numero: string ) : void{
+     if(this.operacao === null){
+       this.numero1 = this.concatenarNumero(this.numero1, numero);
+     }else {
+       this.numero2 = this.concatenarNumero(this.numero2, numero)
+     }
+   }
+
+   concatenarNumero(numAtual: string, numConct: string) : string {
+     //caso contenha apenas '0' ou null, reinicia o valor
+     if (numAtual === '0' || numAtual === null){
+       numAtual = '';
+     }
+     
+     //primeiro digito é '.' concatena '0' antes do ponto
+     if (numConct === '.' && numAtual === ''){
+       return '0.';
+     }
+
+     //caso '.' digitado e já contenha um '.', apenas retorna
+     if (numConct === '.' && numAtual.indexOf('.') > -1){
+       return numAtual;
+
+     }
+     return numAtual + numConct;
+   }
+
+   definirOperacao(operacao: string): void{
+     //apenas define a operação caso não exista uma
+     if (this.operacao === null){
+       this.operacao = operacao;
+       return;
+     }
+
+// caso a operação definida e número 2 selecionado, efetua o cálculo da operação
+     if (this.numero2 !== null) {
+       this.resultado = this.calculadoraService.calcular(
+         parseFloat(this.numero1),
+         parseFloat(this.numero2),
+          this.operacao);
+         this.operacao = operacao;
+         this.numero1 = this.resultado.toString();
+         this.numero2 = null;
+         this.resultado = null;
+     }
+   }
+
+   //botão de igual
+   calcular() : void {
+     if (this.numero2 === null){
+       return;
+     }
+     this.resultado = this.calculadoraService.calcular(
+       parseFloat(this.numero1),
+       parseFloat(this.numero2),
+       this.operacao);
+   }
+
+   get display() : string {
+     if (this.resultado !== null){
+       return this.resultado.toString();
+     }
+     if (this.numero2 !== null){
+       return this.numero2;
+     }
+      return this.numero1;
+   }
+
+
+
 
 }

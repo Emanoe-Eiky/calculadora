@@ -10,7 +10,7 @@ export class CalculadoraComponent implements OnInit {
 
   private numero1:  string;
   private numero2:  string;
-  private resultado: number ;
+  private resultado: number;
   private operacao:  string;
   
   constructor(private calculadoraService: CalculadoraService)  { }
@@ -18,8 +18,10 @@ export class CalculadoraComponent implements OnInit {
   ngOnInit(): void {
     this.limpar();
   }
-//execulta o botão C
-//inicialisando ovalor das variaves
+/**
+ * Iniciando os parametros para os valores padões
+ * @return void
+ */
   limpar() : void{
     this.numero1 = '0';
     this.numero2 = null;
